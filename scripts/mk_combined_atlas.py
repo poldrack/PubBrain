@@ -179,18 +179,6 @@ cbl_atlas_data=cbl_atlas.get_data()
 term_voxkeys['cerebellum']=numpy.where(cbl_atlas_data>0)
 
 
-
-term_voxkeys.pop('unclassified',None)
-
 import cPickle
 cPickle.dump(term_voxkeys,open('term_voxkeys.cpkl','wb'))
 
-f=open('term_vox_keys.txt','w')
-keys=term_voxkeys.keys()
-keys.sort()
-
-for k in keys:
-    f.write('%s\n'%k)
-f.close()
-
-    
