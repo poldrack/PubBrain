@@ -14,6 +14,9 @@ class BrainRegion(models.Model):
     # is this a native region in the atlas?
     is_atlasregion=models.BooleanField(default=False)
     
+    # if so, save the voxels associated with the region (as a cPickle)
+    atlas_voxels=models.TextField()
+    
     # parent-child relations in the partonomy
     # a region can only have one parent but can have multiple children
     parent=models.ForeignKey('self', null=True, blank=True)
