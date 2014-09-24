@@ -15,7 +15,7 @@ from pubbrain_app import models
 
 
 print 'getting pubmed records from scratch'
-records={}
+print 'NOTE: This is a toy version'
 
 for brainRegion in models.BrainRegion.objects.all():
     print brainRegion.name,brainRegion.query
