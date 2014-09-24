@@ -32,4 +32,6 @@ f.write('hippocampus\thippocampus\n')
 f.close()
 
 
+# use the toy dictionary to add voxel mappings for atlas regions to db
+execfile('scripts/link_atlasRegions_to_brainRegions.py')
 
