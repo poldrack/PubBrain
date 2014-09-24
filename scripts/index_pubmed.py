@@ -2,36 +2,31 @@
 index pubmed for anatomical ontology terms
 """
 
+from Bio import Entrez
 from Bio.Entrez import efetch, read
 import pickle
+Entrez.email='poldrack@stanford.edu'
 
-ontology=pickle.load(open('pubbrain_hierarchy.pkl'))
+import django
+django.setup()
+from pubbrain_app import models
 
-try:
-    records = pickle.load(open('/Users/poldrack/data_unsynced/pubbrain/pubmed_search_records.pkl','rb'))
-except:
-    print 'getting pubmed records from scratch'
-    records={}
-    for term in ontology.iterkeys():
-    
-        handle=Entrez.esearch(db='pubmed',term=ontology[term]['query'],retmax=100000)
-        records[term] = Entrez.read(handle)
-    
-    pickle.dump(records,open('/Users/poldrack/data_unsynced/pubbrain/pubmed_search_records.pkl','wb'))
+#ontology=pickle.load(open('pubbrain_hierarchy.pkl'))
 
 
-# map terms to each PMID
+print 'getting pubmed records from scratch'
+records={}
 
-try:
-    pmids=pickle.load(open('/Users/poldrack/data_unsynced/pubbrain/pubmed_ids_with_matches.pkl','rb'))
-except:
-    pmids={}
-    for r in records:
-        for id in records[r]['IdList']:
-            if not pmids.has_key(id):
-                pmids[id]=[]
-            pmids[id].append(r)
-            
-    pickle.dump(pmids,open('/Users/poldrack/data_unsynced/pubbrain/pubmed_ids_with_matches.pkl','wb'))
+for brainRegion in models.BrainRegion.objects.all():
+    print brainRegion.name,brainRegion.query
+    handle=Entrez.esearch(db='pubmed',term=brainRegion.query,retmax=10)
+    record = Entrez.read(handle)
+    for id in record['IdList']:
+        try:
+            entry=models.Pmid.objects.get(pubmed_id=id)
+        except:
+            entry=models.Pmid.create(id)
+            entry.save()
+        entry.brain_regions_named.add(brainRegion)
 
 
