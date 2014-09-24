@@ -49,9 +49,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'pubbrain_dev.urls'
+ROOT_URLCONF = 'PubBrain.urls'
 
-WSGI_APPLICATION = 'pubbrain_dev.wsgi.application'
+WSGI_APPLICATION = 'PubBrain.wsgi.application'
 
 
 # Database
