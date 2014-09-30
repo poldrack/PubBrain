@@ -84,3 +84,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+IMAGE_DIR='/Users/poldrack/code/PubBrain/pubbrain_app/static/images'
