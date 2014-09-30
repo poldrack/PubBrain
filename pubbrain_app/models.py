@@ -27,7 +27,9 @@ class BrainRegion(models.Model):
     # in other cases, it may refer to a single parent
     # or to multiple children (e.g., "frontal lobe" is represented
     # by a number of specific parts of the frontal lobe in the atlas)
-    atlasregions=models.ManyToManyField('self', null=True, blank=True)
+    atlasregions=models.ManyToManyField('self', null=True, blank=True,symmetrical=False,related_name="+")
+    
+    last_indexed=models.DateField(auto_now_add=True,auto_now=True)
     
     @classmethod
     def create(cls, name):
@@ -49,3 +51,18 @@ class Pmid(models.Model):
         entry = cls(pubmed_id=pmid)
         return entry
 
+
+# represents a saved search
+class PubmedSearch(models.Model):
+    date_added=models.DateField(auto_now_add=True,auto_now=True)
+    filename=models.CharField(max_length=255) 
+    date_file_saved=models.DateField(auto_now_add=True,auto_now=True)
+    # the pubmed query for the region
+    query=models.CharField(max_length=255)
+    pubmed_ids=models.ManyToManyField(Pmid)
+    @classmethod
+    def create(cls, query):
+        result = cls(query=query)
+        return result
+
+   
