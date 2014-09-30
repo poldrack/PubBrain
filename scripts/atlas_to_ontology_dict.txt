@@ -1,0 +1,3 @@
+hippocampus	hippocampus
+inferior frontal gyrus	inferior frontal gyrus
+middle frontal gyrus	middle frontal gyrus
