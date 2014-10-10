@@ -1,30 +1,29 @@
 """
 parse neurolex ontology
+1. convert csv file to tab-delimited text using excel
+2. fix excel file using:  
+cat allen_brain_atlas_human_ontology.txt | tr '\r' '\n' > allen_brain_atlas_human_ontology_fixed.txt
+
 """
 
-ontology='NIF-GrossAnatomy.owl'
+import simplejson
 
-import ontosPy
+ontologyfile='allen_brain_atlas_human_ontology_fixed.txt'
+treefile='allen_human_brain_ontology_structure_graph.json'
 
-onto=ontosPy.Ontology('NIF-GrossAnatomy.owl')
+f=open(ontologyfile)
+header=f.readline().strip().split('\t')
+lines=[i.strip().split('\t') for i in f.readlines()]
+f.close()
 
-onto.printClassTree()
+tree=simplejson.load(open(treefile))
 
-target_class='birnlex_1103'  # gyrus rectus
-parent_class='birnlex_928' # prefrontal cortex - has gyrus rectus as proper part
+treeitems=tree['msg'][0]
 
-c_targ=onto.classFind(target_class)[0]
-c_parent=onto.classFind(parent_class)[0]
-
-subs=onto.classAllSubs(c[1])
-
-for i in range(len(subs)):
-    s=subs[i]
-    rep=onto.classRepresentation(s)
-    name=rep['label'][0].toPython()
-    if name.find('rectus')>-1:
-        print i,name,rep
-    tripledict={}
-    for t in rep['alltriples']:
-        tripledict[t[0]]=t[1]
-    #print onto.propertyDirectSupers(rep['class'])
+ontologyRegions={}
+for l in lines:
+    key=l[0] # 2].replace(' ','_').replace('"','')
+    ontologyRegions[key]={}
+    for f in range(len(header)):
+        ontologyRegions[key][header[f]]=l[f].replace('"','')
+        
