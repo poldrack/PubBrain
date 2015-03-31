@@ -1,0 +1,24 @@
+{% load staticfiles %}
+<h1> PubBrain results for query: {{ query }} </h1>
+{% if query_results %} 
+<ul> 
+{% for item in query_results %}
+<li><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term={{ item.regionalPmids }}" target=new>{{ item.name }}</a> {{ item.count }} </li> 
+{% endfor %} 
+</ul> 
+{% else %} 
+<p>No matches.</p> 
+{% endif %}
+<br>
+<a href="{{ file_location }}">Link to file</a>
+
+
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}javascript/papaya.css" />
+<script type="text/javascript">
+var params = [];
+params["images"] = ["static/images/MNI152_T1_3mm.nii.gz","static/images/{{ file_name }}"];
+params["{{ file_name }}"]={ "min": 0.5, "max": {{ img_max }},  "lut": "Red-to-Yellow"};
+</script>
+<script type="text/javascript" src="{{ STATIC_URL }}javascript/papaya.js"></script>
+
+<div class="papaya" data-params="params"></div>
