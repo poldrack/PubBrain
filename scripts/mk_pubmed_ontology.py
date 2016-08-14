@@ -16,7 +16,7 @@ run_shell_cmd("cat PubBrainOntology.txt | tr '\r' '\n' > PubbrainOntology_fixed.
 
 
 # first need to run mk_combined_atlas.py to generate atlas terms
-
+# *** getting rid of this by using consistent terms for atlas and ontology
 term_voxkeys=pickle.load(open('term_voxkeys.cpkl','rb'))
 lower_term_voxkeys=[i.lower() for i in term_voxkeys.keys()]
 
@@ -36,6 +36,8 @@ atlasterms={}
 parents=[None]
 
 prevctr=0
+
+dictfile=open('atlas_ontology_dict.txt','w')
 
 for linenum in range(len(lines)):
     l=lines[linenum]
@@ -58,6 +60,8 @@ for linenum in range(len(lines)):
         srchterm=l.strip().split('\t')[-1].lower()
         if srchterm in lower_term_voxkeys:
             atlasterms[term]=srchterm
+            print term,srchterm
+            dictfile.write('%s\t%s\n'%(term,srchterm))
         else:
             print 'unmatched atlas term:',srchterm
         
@@ -82,6 +86,7 @@ for linenum in range(len(lines)):
     #print ctr,term,'parent:',fullhierarchy[term]['parent']
     #print current
     #print term,query,fullhierarchy[term]
+dictfile.close()
 
 for i in fullhierarchy.keys():
     parent=fullhierarchy[i]['parent']
@@ -95,14 +100,14 @@ for i in fullhierarchy.keys():
 
 def findChildrenWithAtlasTerms(name,fullhierarchy):
     atlasterms=[]
-    print 'checking',name
+    #print 'checking',name
     if fullhierarchy[name].has_key('children'):
         for child in fullhierarchy[name]['children']:
             if fullhierarchy[child].has_key('atlasterm'):
                 atlasterms.append(fullhierarchy[child]['atlasterm'])
-                print 'found',atlasterms
+                #print 'found',atlasterms
             else:
-                print 'drilling down:',child
+                #print 'drilling down:',child
                 at=findChildrenWithAtlasTerms(child,fullhierarchy)
                 atlasterms.append(at)
                 
